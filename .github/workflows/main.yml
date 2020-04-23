@@ -22,23 +22,23 @@ jobs:
           echo ::set-env name=PR_TAG::$(echo "pull_request_"$(echo $GITHUB_SHA | cut -c 1-10))
 
       - name: Build Image and Push Latest [master]
-      if: success() && github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository == 'acend-io/docker-selenium-standalone-chrome-ruby'
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_SECRET_ACCESS_KEY }}
-        ECR_REPO: ${{ secrets.AWS_ECR_REPO }}
-      run: |
-        eval $(aws ecr get-login --region us-east-1 --no-include-email)
-        docker build -t $ECR_REPO:latest -f ./.docker/Dockerfile .
-        docker push $ECR_REPO:latest
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository == 'acend-io/docker-selenium-standalone-chrome-ruby'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_SECRET_ACCESS_KEY }}
+          ECR_REPO: ${{ secrets.AWS_ECR_REPO }}
+        run: |
+          eval $(aws ecr get-login --region us-east-1 --no-include-email)
+          docker build -t $ECR_REPO:latest -f ./.docker/Dockerfile .
+          docker push $ECR_REPO:latest
 
       - name: Build Image and Push [pull_request]
-      if: success() && github.event_name == 'pull_request'
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_SECRET_ACCESS_KEY }}
-        ECR_REPO: ${{ secrets.AWS_ECR_REPO }}
-      run: |
-        eval $(aws ecr get-login --region us-east-1 --no-include-email)
-        docker build -t $ECR_REPO:$PR_TAG -f ./.docker/Dockerfile .
-        docker push $ECR_REPO:$PR_TAG
+        if: success() && github.event_name == 'pull_request'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_SECRET_ACCESS_KEY }}
+          ECR_REPO: ${{ secrets.AWS_ECR_REPO }}
+        run: |
+          eval $(aws ecr get-login --region us-east-1 --no-include-email)
+          docker build -t $ECR_REPO:$PR_TAG -f ./.docker/Dockerfile .
+          docker push $ECR_REPO:$PR_TAG
