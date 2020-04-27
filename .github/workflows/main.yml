@@ -29,7 +29,7 @@ jobs:
           ECR_REPO: ${{ secrets.AWS_ECR_REPO }}
         run: |
           eval $(aws ecr get-login --region us-east-1 --no-include-email)
-          docker build -t $ECR_REPO:latest -f ./.docker/Dockerfile .
+          docker build -t $ECR_REPO:latest -f ./Dockerfile .
           docker push $ECR_REPO:latest
 
       - name: Build Image and Push [branch]
@@ -41,5 +41,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           eval $(aws ecr get-login --region us-east-1 --no-include-email)
-          docker build -t $ECR_REPO:$BRANCH_TAG -f ./.docker/Dockerfile .
+          docker build -t $ECR_REPO:$BRANCH_TAG -f ./Dockerfile .
           docker push $ECR_REPO:$BRANCH_TAG
