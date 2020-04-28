@@ -28,7 +28,7 @@ jobs:
           ECR_REPO: ${{ secrets.AWS_ECR_REPO }}
         run: |
           eval $(aws ecr get-login --region us-east-1 --no-include-email)
-          docker build -t $ECR_REPO:latest -f ./Dockerfile .
+          docker build -t $ECR_REPO:pre-build -f ./Dockerfile .
           docker push $ECR_REPO:pre-build
 
       - name: Build Image and Push Latest [master]
