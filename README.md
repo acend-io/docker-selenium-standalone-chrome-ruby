@@ -12,3 +12,4 @@ likely crash.
 ```
 docker run --name chromeshot -v /dev/shm:/dev/shm migeorge/selenium-standalone-chrome-ruby:latest
 ```
+Run the above command
