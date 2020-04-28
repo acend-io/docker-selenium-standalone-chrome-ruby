@@ -41,4 +41,15 @@ jobs:
           eval $(aws ecr get-login --region us-east-1 --no-include-email)
           docker build -t $ECR_REPO:latest -f ./Dockerfile .
           docker push $ECR_REPO:latest
+
+      - name: Build Image and Push [release]
+        if: success() && github.event_name == 'release'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ECR_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ECR_SECRET_ACCESS_KEY }}
+          ECR_REPO: ${{ secrets.AWS_ECR_REPO }}
+        run: |
+          eval $(aws ecr get-login --region us-east-1 --no-include-email)
+          docker build -t $ECR_REPO:$RELEASE_TAG -f ./Dockerfile .
+          docker push $ECR_REPO:$RELEASE_TAG
     
